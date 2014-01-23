@@ -205,10 +205,6 @@ function (
                     this.toggle();
                 }));
                 this._events.push(toggleClick);
-                // drawer node
-                this._drawer = this._contentPaneSide.domNode;
-                // drawer width
-                this._drawerWidth = domStyle.get(this._drawer, 'width');
                 // window size event
                 var winResize = on(window, 'resize', lang.hitch(this, function () {
                     this._windowResized();
