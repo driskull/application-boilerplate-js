@@ -40,7 +40,7 @@
 }
 .content-pane-left {
     width: 0px;
-    max-width: 325px;
+    max-width: 300px;
     height: 100%;
     padding: 0;
     margin: 0;
@@ -54,7 +54,7 @@
     transition: width 250ms ease;
 }
 .drawer-open .content-pane-left {
-    width: 325px;
+    width: 300px;
     overflow: auto;
     overflow-x: hidden;
     border-right: 1px solid #ddd;
