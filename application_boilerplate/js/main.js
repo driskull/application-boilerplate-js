@@ -4,7 +4,10 @@ define([
     "dojo/_base/lang",
     "esri/arcgis/utils",
     "esri/IdentityManager",
-    "dojo/on"
+    "dojo/on",
+    "dojo/dom",
+    "application/Drawer",
+    "esri/dijit/Legend"
 ],
 function(
     ready, 
@@ -12,7 +15,10 @@ function(
     lang,
     arcgisUtils,
     IdentityManager,
-    on
+    on,
+    dom,
+    Drawer,
+    Legend
 ) {
     return declare("", null, {
         config: {},
@@ -21,6 +27,20 @@ function(
             // and application id
             // any url parameters and any application specific configuration information. 
             this.config = config;
+            // responsive drawer
+            this._drawer = new Drawer({
+                showDrawerSize: 850,
+                container: dom.byId('bc_outer'),
+                contentCenter: dom.byId('cp_outer_center'),
+                contentLeft: dom.byId('cp_outer_left'),
+                toggleButton: dom.byId('hamburger_button'),
+                direction: this.config.i18n.direction
+            });
+            // drawer resize event
+            // on(this._drawer, 'resize', lang.hitch(this, function () {}));
+            // startup drawer
+            this._drawer.startup();
+            // map ready
             ready(lang.hitch(this, function() {
                 this._createWebMap();
             }));
@@ -28,6 +48,10 @@ function(
         _mapLoaded: function() {
             // Map is ready
             console.log('map loaded');
+            var legend = new Legend({
+                map: this.map
+            }, "legendDiv");
+            legend.startup();
         },
         //create a map based on the input web map id
         _createWebMap: function() {
