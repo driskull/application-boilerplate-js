@@ -6,7 +6,6 @@ define([
     "dojo/on",
     "dojo/dom",
     "dojo/dom-class",
-    "dojo/dom-style",
     "dijit/layout/BorderContainer",
     "dijit/layout/ContentPane",
     "dojo/Deferred",
@@ -18,7 +17,7 @@ function (
     lang,
     _WidgetBase,
     on,
-    dom, domClass, domStyle,
+    dom, domClass,
     BorderContainer, ContentPane,
     Deferred,
     win
