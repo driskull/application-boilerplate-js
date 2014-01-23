@@ -5,7 +5,6 @@ define([
     "esri/arcgis/utils",
     "esri/IdentityManager",
     "dojo/on",
-    "dojo/dom",
     "application/Drawer",
     "esri/dijit/Legend"
 ],
@@ -16,7 +15,6 @@ function(
     arcgisUtils,
     IdentityManager,
     on,
-    dom,
     Drawer,
     Legend
 ) {
@@ -29,15 +27,13 @@ function(
             this.config = config;
             // responsive drawer
             this._drawer = new Drawer({
-                showDrawerSize: 850,
-                container: dom.byId('bc_outer'),
-                contentCenter: dom.byId('cp_outer_center'),
-                contentLeft: dom.byId('cp_outer_left'),
-                toggleButton: dom.byId('hamburger_button'),
-                direction: this.config.i18n.direction
+                showDrawerSize: 850, // Pixel size when the drawer is automatically opened
+                borderContainer: "border_container", // border container node id
+                contentPaneCenter: "cp_center", // center content pane node id
+                contentPaneSide: "cp_left", // side content pane id
+                toggleButton: "toggle_button", // button node to toggle drawer id
+                direction: this.config.i18n.direction // i18n direction "ltr" or "rtl"
             });
-            // drawer resize event
-            // on(this._drawer, 'resize', lang.hitch(this, function () {}));
             // startup drawer
             this._drawer.startup();
             // map ready
