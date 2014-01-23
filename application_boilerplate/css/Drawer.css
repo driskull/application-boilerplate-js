@@ -25,7 +25,7 @@
     cursor: pointer;
     height: 34px;
     width: 34px;
-    background: url(http://png-5.findicons.com/files/icons/2771/batch/32/menu_2.png) no-repeat center center;
+    background: url(../images/menu.png) no-repeat center center;
 }
 .esriRTL .hamburger-button {
     float: right;
@@ -40,7 +40,7 @@
 }
 .content-pane-left {
     width: 0px;
-    max-width: 280px;
+    max-width: 325px;
     height: 100%;
     padding: 0;
     margin: 0;
@@ -54,7 +54,7 @@
     transition: width 250ms ease;
 }
 .drawer-open .content-pane-left {
-    width: 280px;
+    width: 325px;
     overflow: auto;
     overflow-x: hidden;
     border-right: 1px solid #ddd;
