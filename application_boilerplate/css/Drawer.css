@@ -53,6 +53,9 @@
     -o-transition: width 250ms ease;
     transition: width 250ms ease;
 }
+.app-loading .content-pane-left {
+    width: 280px;
+}
 .drawer-open .content-pane-left {
     width: 280px;
     overflow: auto;
@@ -72,4 +75,9 @@
 }
 .esriSimpleSlider {
     top: 55px;
+}
+@media screen and (max-width: 850px) {
+    .app-loading .content-pane-left {
+        width: 0px;
+    }
 }
