@@ -22,16 +22,14 @@ function (
     Deferred,
     win
 ) {
-    var Widget = declare([_WidgetBase, Evented], {
-        declaredClass: "application.Drawer",
+    var Widget = declare("application.Drawer", [_WidgetBase, Evented], {
         options: {
             showDrawerSize: 850,
             borderContainer: null,
             contentPaneCenter: null,
             contentPaneSide: null,
             toggleButton: null,
-            direction: 'ltr',
-            mapResizeTimeout: 260,
+            mapResizeTimeout: 300,
             mapResizeStepTimeout: 25
         },
         // lifecycle: 1
@@ -44,13 +42,12 @@ function (
             this.set("contentPaneCenter", defaults.contentPaneCenter);
             this.set("contentPaneSide", defaults.contentPaneSide);
             this.set("toggleButton", defaults.toggleButton);
-            this.set("direction", defaults.direction);
             this.set("mapResizeTimeout", defaults.mapResizeTimeout);
             this.set("mapResizeStepTimeout", defaults.mapResizeStepTimeout);
             // classes
             this.css = {
-                toggleButton: 'toggle-button',
-                toggleButtonSelected: 'toggle-button-selected',
+                toggleButton: 'toggle-grey',
+                toggleButtonSelected: 'toggle-grey-on',
                 drawerOpen: "drawer-open",
                 drawerOpenComplete: "drawer-open-complete"
             };
@@ -87,7 +84,7 @@ function (
             // true if drawer is opened
             var currentlyOpen = domClass.contains(document.body, this.css.drawerOpen);
             // if already open or already closed and asked to do the same
-            if (currentlyOpen && add === true || !currentlyOpen && add === false) {
+            if ((currentlyOpen && add === true) || (!currentlyOpen && add === false)) {
                 // return
                 return def.promise;
             }
@@ -118,8 +115,6 @@ function (
             }
             // wait for animation to finish
             this._animationTimeout = setTimeout(lang.hitch(this, function () {
-                // resize border container
-                this.resize();
                 // remove shown drawer
                 this._checkDrawerStatus();
                 // stop resizing container
@@ -174,6 +169,7 @@ function (
             ) {
                 // outer container
                 this._borderContainer = new BorderContainer({
+                    design: "sidebar",
                     gutters: false
                 }, this._borderContainerNode);
                 // center panel
@@ -184,14 +180,9 @@ function (
                     }
                 }, this._contentPaneCenterNode);
                 this._borderContainer.addChild(this._contentPaneCenter);
-                // panel side
-                var side = 'left';
-                if (this.get("direction") === 'rtl') {
-                    side = 'right';
-                }
-                // left panel
+                // leading panel
                 this._contentPaneSide = new ContentPane({
-                    region: side,
+                    region: 'leading',
                     style: {
                         padding: 0
                     }
@@ -204,11 +195,20 @@ function (
                     this.toggle();
                 }));
                 this._events.push(toggleClick);
+                // window
+                var w = win.get(document);
                 // window size event
-                var winResize = on(window, 'resize', lang.hitch(this, function () {
+                var winResize = on(w, 'resize', lang.hitch(this, function () {
                     this._windowResized();
                 }));
                 this._events.push(winResize);
+                // window focused on
+                var winFocus = on(w, 'focus', lang.hitch(this, function(){
+                    setTimeout(lang.hitch(this, function(){
+                        this.resize();
+                    }),250);
+                }));
+                this._events.push(winFocus);
                 // check window size
                 this._windowResized();
                 // fix layout
@@ -223,17 +223,20 @@ function (
         },
         _windowResized: function () {
             // view screen
-            var vs = win.getBox();
+            var vs = win.getBox(), add;
             // if window width is less than specified size
             if (vs.w < this.get("showDrawerSize")) {
                 // hide drawer
-                this.toggle(false);
+                add = false;
             } else {
                 // show drawer
-                this.toggle(true);
+                add = true;
             }
-            // remove forced open
-            this._checkDrawerStatus();
+            // toggle
+            this.toggle(add).always(lang.hitch(this, function(){
+                // remove forced open
+                this._checkDrawerStatus(); 
+            }));
         },
         _checkDrawerStatus: function () {
             // border container layout
